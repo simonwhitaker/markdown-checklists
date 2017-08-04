@@ -2,8 +2,8 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle Markdown Checklists'
-      'command': 'markdown-checklists:toggle'
+      'label': 'Toggle Markdown Checklist Item'
+      'command': 'markdown-checklists:toggle-item'
     }
   ]
 'menu': [
@@ -13,8 +13,12 @@
       'label': 'Markdown Checklists'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'markdown-checklists:toggle'
+          'label': 'Toggle Stats'
+          'command': 'markdown-checklists:toggle-stats'
+        },
+        {
+          'label': 'Toggle Item'
+          'command': 'markdown-checklists:toggle-item'
         }
       ]
     ]

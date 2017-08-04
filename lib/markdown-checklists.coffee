@@ -1,5 +1,5 @@
 MarkdownChecklistsView = require './markdown-checklists-view'
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Point, Range} = require 'atom'
 
 module.exports = MarkdownChecklists =
   markdownChecklistsView: null
@@ -14,7 +14,8 @@ module.exports = MarkdownChecklists =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-stats': => @toggle_stats()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-item': => @toggle_item()
 
   deactivate: ->
     @modalPanel.destroy()
@@ -24,9 +25,21 @@ module.exports = MarkdownChecklists =
   serialize: ->
     markdownChecklistsViewState: @markdownChecklistsView.serialize()
 
-  toggle: ->
-    console.log 'MarkdownChecklists was toggled!'
+  toggle_item: ->
+    console.log 'MarkdownChecklists toggled item'
+    if editor = atom.workspace.getActiveTextEditor()
+      for position in editor.getCursorBufferPositions()
+        text = editor.lineTextForBufferRow(position.row)
+        replacement = text.replace /^(\s*- \[)(.)(\])/, (match, pre, val, post) ->
+          newval = 'x'
+          if val == 'x'
+            newval = ' '
+          return [pre, newval, post].join('')
+        if text != replacement
+          range = new Range(new Point(position.row, 0), new Point(position.row, text.length))
+          editor.setTextInBufferRange(range, replacement)
 
+  toggle_stats: ->
     if @modalPanel.isVisible()
       @modalPanel.hide()
     else

@@ -9,7 +9,7 @@
       "todo"
   ],
   "activationCommands": {
-    "atom-workspace": "markdown-checklists:toggle"
+    "atom-workspace": "markdown-checklists:toggle-stats"
   },
   "repository": "https://github.com/atom/markdown-checklists",
   "license": "MIT",
