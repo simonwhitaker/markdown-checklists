@@ -3,22 +3,26 @@ MarkdownChecklistsView = require './markdown-checklists-view'
 
 module.exports = MarkdownChecklists =
   markdownChecklistsView: null
-  modalPanel: null
+  statsTile: null
   subscriptions: null
 
   activate: (state) ->
     @markdownChecklistsView = new MarkdownChecklistsView(state.markdownChecklistsViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @markdownChecklistsView.getElement(), visible: false)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
-    # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-stats': => @toggle_stats()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-stats': => @refresh_stats()
     @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-item': => @toggle_item()
 
+  consumeStatusBar: (statusBar) ->
+    console.log('Calling consumeStatusBar')
+    @statsTile = statusBar.addLeftTile(item: @markdownChecklistsView.getElement(), priority: 1000)
+
   deactivate: ->
-    @modalPanel.destroy()
+    @statsTile?.destroy()
+    @statsTile = null
+
     @subscriptions.dispose()
     @markdownChecklistsView.destroy()
 
@@ -38,22 +42,19 @@ module.exports = MarkdownChecklists =
         if text != replacement
           range = new Range(new Point(position.row, 0), new Point(position.row, text.length))
           editor.setTextInBufferRange(range, replacement)
+          this.refresh_stats()
 
-  toggle_stats: ->
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      editor = atom.workspace.getActiveTextEditor()
-      lines = editor.getText().split(/\r?\n/)
+  refresh_stats: ->
+    editor = atom.workspace.getActiveTextEditor()
+    lines = editor.getText().split(/\r?\n/)
 
-      checked = 0
-      total = 0
-      for line in lines
-        matches = line.match(/^\s*- \[(.)\]/)
-        if matches
-          total++
-          if matches[1] == 'x'
-            checked++
+    checked = 0
+    total = 0
+    for line in lines
+      matches = line.match(/^\s*- \[(.)\]/)
+      if matches
+        total++
+        if matches[1] == 'x'
+          checked++
 
-      @markdownChecklistsView.setCounts(checked, total)
-      @modalPanel.show()
+    @markdownChecklistsView.setCounts(checked, total)

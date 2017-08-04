@@ -7,7 +7,6 @@ class MarkdownChecklistsView
 
     # Create message element
     message = document.createElement('div')
-    message.textContent = "The MarkdownChecklists package is Alive! It's ALIVE!"
     message.classList.add('message')
     @element.appendChild(message)
 
