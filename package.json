@@ -1,0 +1,21 @@
+{
+  "name": "markdown-checklists",
+  "main": "./lib/markdown-checklists",
+  "version": "0.0.1",
+  "description": "Enables managing checklists in Markdown documents",
+  "keywords": [
+      "markdown",
+      "checklists",
+      "todo"
+  ],
+  "activationCommands": {
+    "atom-workspace": "markdown-checklists:toggle"
+  },
+  "repository": "https://github.com/atom/markdown-checklists",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}

@@ -1,0 +1,22 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle Markdown Checklists'
+      'command': 'markdown-checklists:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Markdown Checklists'
+      'submenu': [
+        {
+          'label': 'Toggle'
+          'command': 'markdown-checklists:toggle'
+        }
+      ]
+    ]
+  }
+]
