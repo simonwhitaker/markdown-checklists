@@ -6,9 +6,9 @@ class MarkdownChecklistsView
     @element.classList.add('markdown-checklists')
 
     # Create message element
-    message = document.createElement('div')
-    message.classList.add('message')
-    @element.appendChild(message)
+    @message = document.createElement('div')
+    @message.classList.add('message')
+    @element.appendChild(@message)
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
@@ -21,6 +21,6 @@ class MarkdownChecklistsView
     @element
 
   setCounts: (checked, total) ->
-    percent = checked * 100 / total
+    percent = Math.round(checked * 100 / total)
     displayText = "#{checked}/#{total} (#{percent}%)"
-    @element.children[0].textContent = displayText
+    @message.textContent = displayText

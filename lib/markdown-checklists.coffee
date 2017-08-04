@@ -17,7 +17,8 @@ module.exports = MarkdownChecklists =
 
   consumeStatusBar: (statusBar) ->
     console.log('Calling consumeStatusBar')
-    @statsTile = statusBar.addLeftTile(item: @markdownChecklistsView.getElement(), priority: 1000)
+    @statsTile = statusBar.addRightTile(item: @markdownChecklistsView.getElement(), priority: 500)
+    console.log(@statsTile)
 
   deactivate: ->
     @statsTile?.destroy()
@@ -42,19 +43,19 @@ module.exports = MarkdownChecklists =
         if text != replacement
           range = new Range(new Point(position.row, 0), new Point(position.row, text.length))
           editor.setTextInBufferRange(range, replacement)
-          this.refresh_stats()
+          @refresh_stats()
 
   refresh_stats: ->
-    editor = atom.workspace.getActiveTextEditor()
-    lines = editor.getText().split(/\r?\n/)
+    if editor = atom.workspace.getActiveTextEditor()
+      lines = editor.getText().split(/\r?\n/)
 
-    checked = 0
-    total = 0
-    for line in lines
-      matches = line.match(/^\s*- \[(.)\]/)
-      if matches
-        total++
-        if matches[1] == 'x'
-          checked++
+      checked = 0
+      total = 0
+      for line in lines
+        matches = line.match(/^\s*- \[(.)\]/)
+        if matches
+          total++
+          if matches[1] == 'x'
+            checked++
 
-    @markdownChecklistsView.setCounts(checked, total)
+      @markdownChecklistsView.setCounts(checked, total)
