@@ -21,6 +21,9 @@ class MarkdownChecklistsView
     @element
 
   setCounts: (checked, total) ->
+    if total == 0
+      @message.textContent = ""
+      return
     percent = Math.round(checked * 100 / total)
     displayText = "#{checked}/#{total} (#{percent}%)"
     @message.textContent = displayText

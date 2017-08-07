@@ -10,15 +10,17 @@ module.exports = MarkdownChecklists =
     @markdownChecklistsView = new MarkdownChecklistsView(state.markdownChecklistsViewState)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+    mypackage = this
     @subscriptions = new CompositeDisposable
-
     @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-stats': => @refresh_stats()
     @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-checklists:toggle-item': => @toggle_item()
+    @subscriptions.add atom.workspace.onDidStopChangingActivePaneItem ->
+      mypackage.refresh_stats()
+    
+    @refresh_stats()
 
   consumeStatusBar: (statusBar) ->
-    console.log('Calling consumeStatusBar')
     @statsTile = statusBar.addRightTile(item: @markdownChecklistsView.getElement(), priority: 500)
-    console.log(@statsTile)
 
   deactivate: ->
     @statsTile?.destroy()
@@ -57,5 +59,4 @@ module.exports = MarkdownChecklists =
           total++
           if matches[1] == 'x'
             checked++
-
       @markdownChecklistsView.setCounts(checked, total)
